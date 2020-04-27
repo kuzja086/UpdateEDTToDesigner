@@ -40,13 +40,14 @@ pipeline {
                         SRC = "./${PROJECT_NAME}/src"
 
                         CURRENT_CATALOG = pwd()
-                        TEMP_CATALOG = "${CURRENT_CATALOG}\\xmlpath"
+                        TEMP_CATALOG = "${CURRENT_CATALOG}\\temp"
                         CURRENT_CATALOG = "${CURRENT_CATALOG}\\Repo"
+                        XMLPATH = "${TEMP_CATALOG}\\xmlpath"
 
                         // создаем/очищаем временный каталог
                         dir(TEMP_CATALOG) {
                             deleteDir()
-                            dir(TEMP_CATALOG){}
+                            dir(XMLPATH){}
                         }
                         PROJECT_NAME_EDT = "${CURRENT_CATALOG}\\${PROJECT_NAME}"
 
