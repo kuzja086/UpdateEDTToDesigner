@@ -55,6 +55,7 @@ pipeline {
                         PROJECT_NAME_EDT = "${CURRENT_CATALOG}\\${PROJECT_NAME}"
 
                         EDT_VERSION = EDT_VERSION.isEmpty() ? '2020.3' : EDT_VERSION
+                    }
                 }
             }
         }
