@@ -46,6 +46,7 @@ pipeline {
                         // создаем/очищаем временный каталог
                         dir(TEMP_CATALOG) {
                             deleteDir()
+                            dir(TEMP_CATALOG)
                         }
                         PROJECT_NAME_EDT = "${CURRENT_CATALOG}\\${PROJECT_NAME}"
 
@@ -75,7 +76,6 @@ pipeline {
                 timestamps {
                     script {
                         cmd("""
-                        @set RING_OPTS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru
                         ring edt@${EDT_VERSION} workspace export --workspace-location \"${TEMP_CATALOG}\" --project \"${PROJECT_NAME_EDT}\" --configuration-files \"${TEMP_CATALOG}\
                         """)
                    }
