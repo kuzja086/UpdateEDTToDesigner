@@ -40,14 +40,12 @@ pipeline {
                         SRC = "./${PROJECT_NAME}/src"
 
                         CURRENT_CATALOG = pwd()
-                        TEMP_CATALOG = "${CURRENT_CATALOG}\\sonar_temp"
-                        XMLPATH = "${TEMP_CATALOG}\\xmlpath"
+                        TEMP_CATALOG = "${CURRENT_CATALOG}\\xmlpath"
                         CURRENT_CATALOG = "${CURRENT_CATALOG}\\Repo"
 
                         // создаем/очищаем временный каталог
                         dir(TEMP_CATALOG) {
                             deleteDir()
-                            dir(XMLPATH)
                         }
                         PROJECT_NAME_EDT = "${CURRENT_CATALOG}\\${PROJECT_NAME}"
 
@@ -78,7 +76,7 @@ pipeline {
                     script {
                         cmd("""
                         @set RING_OPTS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru
-                        ring edt@${EDT_VERSION} workspace export --workspace-location \"${TEMP_CATALOG}\" --project \"${PROJECT_NAME_EDT}\" --configuration-files \"${XMLPATH}\
+                        ring edt@${EDT_VERSION} workspace export --workspace-location \"${TEMP_CATALOG}\" --project \"${PROJECT_NAME_EDT}\" --configuration-files \"${TEMP_CATALOG}\
                         """)
                    }
                 }
