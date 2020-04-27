@@ -77,7 +77,7 @@ pipeline {
                 timestamps {
                     script {
                         cmd("""
-                        ring edt@${EDT_VERSION} workspace export --workspace-location \"${TEMP_CATALOG}\" --project \"${PROJECT_NAME_EDT}\" --configuration-files \"${TEMP_CATALOG}\
+                        ring edt@${EDT_VERSION} workspace export --workspace-location \"${TEMP_CATALOG}\" --project \"${PROJECT_NAME_EDT}\" --configuration-files \"${XMLPATH}\
                         """)
                    }
                 }
