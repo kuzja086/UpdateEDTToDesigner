@@ -46,7 +46,7 @@ pipeline {
                         // создаем/очищаем временный каталог
                         dir(TEMP_CATALOG) {
                             deleteDir()
-                            dir(TEMP_CATALOG)
+                            dir(TEMP_CATALOG){}
                         }
                         PROJECT_NAME_EDT = "${CURRENT_CATALOG}\\${PROJECT_NAME}"
 
