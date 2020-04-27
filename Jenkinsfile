@@ -16,7 +16,7 @@ def PROJECT_URL = ''
 pipeline {
 
     parameters {
-        string(defaultValue: "${env.PROJECT_NAME}", description: '* Имя проекта. Одинаковое для EDT, проекта в АПК и в сонаре. Обычно совпадает с именем конфигурации.', name: 'PROJECT_NAME')
+        string(defaultValue: "${env.PROJECT_NAME}", description: '* Имя проекта в EDT', name: 'PROJECT_NAME')
         string(defaultValue: "${env.git_repo_url}", description: '* URL к гит-репозиторию, который необходимо проверить.', name: 'git_repo_url')
         string(defaultValue: "${env.git_repo_branch}", description: 'Ветка репозитория, которую необходимо проверить. По умолчанию master', name: 'git_repo_branch') 
         string(defaultValue: "${env.jenkinsAgent}", description: 'Нода дженкинса, на которой запускать пайплайн. По умолчанию master', name: 'jenkinsAgent')
@@ -37,9 +37,6 @@ pipeline {
 
                         git_repo_branch = git_repo_branch.isEmpty() ? 'master' : git_repo_branch
                         
-                        BIN_CATALOG = "${sonar_catalog}/bin/"
-                        ACC_BASE = "${sonar_catalog}/ACC/"
-                        ACC_USER = 'Admin'
                         SRC = "./${PROJECT_NAME}/src"
 
                         CURRENT_CATALOG = pwd()
