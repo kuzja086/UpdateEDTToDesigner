@@ -54,7 +54,7 @@ pipeline {
                 }
             }
         }
-        stage('Checkout') {
+        stage('Проверка изменений проекта') {
             steps {
                 timestamps {
                     script {
@@ -64,13 +64,13 @@ pipeline {
                             doGenerateSubmoduleConfigurations: false,
                             extensions: [[$class: 'CheckoutOption', timeout: 60], [$class: 'CloneOption', depth: 0, noTags: true, reference: '', shallow: false, timeout: 60]],
                             submoduleCfg: [],
-                            userRemoteConfigs: [[credentialsId: git_credentials_Id, url: git_repo_url]]])
+                            userRemoteConfigs: [[url: git_repo_url]]])
                         }
                     }
                 }
             }
         }
-        stage('EDT') {
+        stage('Выгрузка проекта из EDT в файлы конфигурации') {
             steps {
                 timestamps {
                     script {
