@@ -103,7 +103,8 @@ pipeline {
                 timestamps {
                     script {
                         cmd("""
-                        C:\\Program Files\\1cv8\\\"${PLATFORM1C}\"\\bin\\1cv8.exe" DESIGNER /s \"${baseconnbtring}\" /N\"${USER1C}\" /P\"${PWD1C}\" /LoadConfigFromFiles \"${XMLPATH}\" /UpdateDBCfg
+                        cd C:\\Program Files\\1cv8\\\"${PLATFORM1C}\"\\bin\\
+                        1cv8.exe" DESIGNER /s \"${baseconnbtring}\" /N\"${USER1C}\" /P\"${PWD1C}\" /LoadConfigFromFiles \"${XMLPATH}\" /UpdateDBCfg
                         """)
                    }
                 }
