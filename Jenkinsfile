@@ -51,8 +51,8 @@ pipeline {
                         // создаем/очищаем временный каталог
                         dir(TEMP_CATALOG) {
                             deleteDir()
+                            dir(XMLPATH){}
                         }
-                        dir(XMLPATH){}
 
                         PROJECT_NAME_EDT = "${CURRENT_CATALOG}\\${PROJECT_NAME}"
 
