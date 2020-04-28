@@ -105,7 +105,7 @@ pipeline {
                     script {
                         cmd("""
                         cd /D C:\\Program Files (x86)\\1cv8\\${PLATFORM1C}\\bin\\
-                        1cv8.exe CREATEINFOBASE ${IB} DBFormat ${shortPlatformName}
+                        1cv8.exe CREATEINFOBASE ${IB}
                         1cv8.exe DESIGNER /WA- /DISABLESTARTUPDIALOGS ${IB} /LoadConfigFromFiles ${XMLPATH} /UpdateDBCfg
                         """)
                    }
