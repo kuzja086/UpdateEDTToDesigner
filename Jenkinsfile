@@ -54,8 +54,6 @@ pipeline {
                         dir(XMLPATH){
                             deleteDir()
                         }
-                        shortPlatformName
-                        IB = "File = ${TEMP_CATALOG} DBFormat "
 
                         PROJECT_NAME_EDT = "${CURRENT_CATALOG}\\${PROJECT_NAME}"
 
