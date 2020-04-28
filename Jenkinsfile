@@ -67,7 +67,7 @@ pipeline {
                         CFPATH = "${CFPATH}\\${PROJECT_NAME}.cf"
 
                         shortPlatformName = utils.shortPlatformName(PLATFORM1C)
-                        IB = "File ${TEMP_CATALOG}"
+                        IB = "File=${TEMP_CATALOG}"
                     }
                 }
             }
