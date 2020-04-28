@@ -60,7 +60,7 @@ pipeline {
 
                         SERVER1C = SERVER1C.isEmpty() ? "localhost" : SERVER1C
                         PORT1C = PORT1C.isEmpty() ? "1541" : PORT1C
-                        PLATFORM1C = PLATFORM1C.isEmpty ? "8.3.14.1779" : PLATFORM1C
+                        PLATFORM1C = PLATFORM1C.isEmpty() ? "8.3.14.1779" : PLATFORM1C
                         baseconnbtring = projectHelpers.getConnString(SERVER1C, BASE1C, PORT1C)
 
                         CFPATH = "${CFPATH}\\${PROJECT_NAME}.cf"
