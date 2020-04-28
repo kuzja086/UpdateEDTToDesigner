@@ -18,13 +18,13 @@ pipeline {
         string(defaultValue: "${env.git_repo_branch}", description: 'Ветка репозитория, которую необходимо проверить. По умолчанию master', name: 'git_repo_branch') 
         string(defaultValue: "${env.jenkinsAgent}", description: 'Нода дженкинса, на которой запускать пайплайн. По умолчанию master', name: 'jenkinsAgent')
         string(defaultValue: "${env.EDT_VERSION}", description: 'Используемая версия EDT. По умолчанию 2020.3', name: 'EDT_VERSION')
-        string(defaultValue: "${env.Platform1C}", description: 'Используемая платформа. По умолчанию 8.3.14.1779', name: '1сPlatform')
-        string(defaultValue: "${env.1сServer}", description: 'Адрес сервера 1С. По умолчанию localhost', name: '1сServer')
-        string(defaultValue: "${env.1cPort}", description: 'Порт агента кластера 1с. По умолчанию 1541', name: '1cPort')
-        string(defaultValue: "${env.1cUser}", description: 'Имя пользователя базы 1с', name: '1cUser')
-        string(defaultValue: "${env.1cPwd}", description: 'Пароль пользователя', name: '1cPwd')
-        string(defaultValue: "${env.1сBase}", description: 'Имя базы для загрузки из файлов', name: '1сBase')
-        string(defaultValue: "${env.cfPath}", description: 'Путь для сохранения файла .cf', name: 'cfPath')
+        string(defaultValue: "${env.PLATFORM1C}", description: 'Используемая платформа. По умолчанию 8.3.14.1779', name: 'PLATFORM1C')
+        string(defaultValue: "${env.SERVER1C}", description: 'Адрес сервера 1С. По умолчанию localhost', name: 'SERVER1C')
+        string(defaultValue: "${env.PORT1C}", description: 'Порт агента кластера 1с. По умолчанию 1541', name: 'PORT1C')
+        string(defaultValue: "${env.USER1C}", description: 'Имя пользователя базы 1с', name: 'USER1C')
+        string(defaultValue: "${env.PWD1C}", description: 'Пароль пользователя', name: 'PWD1C')
+        string(defaultValue: "${env.BASE1C}", description: 'Имя базы для загрузки из файлов', name: 'BASE1C')
+        string(defaultValue: "${env.CFPATH}", description: 'Путь для сохранения файла .cf', name: 'CFPATH')
     }
     agent {
         label "${(env.jenkinsAgent == null || env.jenkinsAgent == 'null') ? "master" : env.jenkinsAgent}"
@@ -58,11 +58,11 @@ pipeline {
 
                         EDT_VERSION = EDT_VERSION.isEmpty() ? '2020.3' : EDT_VERSION
 
-                        1сServer = 1сServer.isEmpty() ? "localhost" : 1сServer
-                        1cPort = 1cPort.isEmpty() ? "1541" : 1cPort
-                        1сPlatform = 1сPlatform.isEmpty ? "8.3.14.1779" : 1cPlatform
+                        SERVER1C = SERVER1C.isEmpty() ? "localhost" : SERVER1C
+                        PORT1C = PORT1C.isEmpty() ? "1541" : PORT1C
+                        PLATFORM1C = PLATFORM1C.isEmpty ? "8.3.14.1779" : PLATFORM1C
 
-                        baseconnbtring = projectHelpers.getConnString(1сServer, 1сBase, 1cPort)
+                        baseconnbtring = projectHelpers.getConnString(SERVER1C, BASE1C, PORT1C)
                     }
                 }
             }
@@ -88,7 +88,7 @@ pipeline {
                 timestamps {
                     script {
                         cmd("""
-                        ring edt@${EDT_VERSION} workspace export --workspace-location \"${1сServer}\" --project \"${PROJECT_NAME_EDT}\" --configuration-files \"${XMLPATH}\
+                        ring edt@${EDT_VERSION} workspace export --workspace-location \"${TEMP_CATALOG}\" --project \"${PROJECT_NAME_EDT}\" --configuration-files \"${XMLPATH}\
                         """)
                    }
                 }
@@ -99,7 +99,7 @@ pipeline {
                 timestamps {
                     script {
                         cmd("""
-                        C:\\Program Files\\1cv8\\\"${1сPlatform}\"\\bin\\1cv8.exe" DESIGNER /s \"${baseconnbtring}\" /N\"${1cUser}\" /P\"${1cPwd}\" /LoadConfigFromFiles \"${XMLPATH}\" /UpdateDBCfg
+                        C:\\Program Files\\1cv8\\\"${PLATFORM1C}\"\\bin\\1cv8.exe" DESIGNER /s \"${baseconnbtring}\" /N\"${USER1C}\" /P\"${PWD1C}\" /LoadConfigFromFiles \"${XMLPATH}\" /UpdateDBCfg
                         """)
                    }
                 }
@@ -110,7 +110,7 @@ pipeline {
                 timestamps {
                     script {
                         cmd("""
-                        C:\\Program Files\\1cv8\\\"${1сPlatform}\"\\bin\\1cv8.exe" DESIGNER /s \"${baseconnbtring}\" /N\"${1cUser}\" /P\"${1cPwd}\" /DumpDBCfg  \"${cfPath}\"
+                        C:\\Program Files\\1cv8\\\"${PLATFORM1C}\"\\bin\\1cv8.exe" DESIGNER /s \"${baseconnbtring}\" /N\"${USER1C}\" /P\"${PWD1C}\" /DumpDBCfg  \"${CFPATH}\"
                         """)
                    }
                 }
