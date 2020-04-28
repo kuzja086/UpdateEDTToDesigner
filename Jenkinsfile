@@ -11,7 +11,7 @@ def GENERIC_ISSUE_JSON = ''
 def SRC = ''
 def PROJECT_URL = ''
 def projectHelpers = new ProjectHelpers()
-def Utils = new Utils()
+def utils = new Utils()
 
 pipeline {
 
@@ -22,11 +22,11 @@ pipeline {
         string(defaultValue: "${env.jenkinsAgent}", description: 'Нода дженкинса, на которой запускать пайплайн. По умолчанию master', name: 'jenkinsAgent')
         string(defaultValue: "${env.EDT_VERSION}", description: 'Используемая версия EDT. По умолчанию 2020.3', name: 'EDT_VERSION')
         string(defaultValue: "${env.PLATFORM1C}", description: 'Используемая платформа. По умолчанию 8.3.14.1779', name: 'PLATFORM1C')
-        string(defaultValue: "${env.SERVER1C}", description: 'Адрес сервера 1С. По умолчанию localhost', name: 'SERVER1C')
-        string(defaultValue: "${env.PORT1C}", description: 'Порт агента кластера 1с. По умолчанию 1541', name: 'PORT1C')
-        string(defaultValue: "${env.BASE1C}", description: 'Имя базы для загрузки из файлов', name: 'BASE1C')
-        string(defaultValue: "${env.USER1C}", description: 'Имя пользователя базы 1с', name: 'USER1C')
-        string(defaultValue: "${env.PWD1C}", description: 'Пароль пользователя', name: 'PWD1C')
+        //string(defaultValue: "${env.SERVER1C}", description: 'Адрес сервера 1С. По умолчанию localhost', name: 'SERVER1C')
+        //string(defaultValue: "${env.PORT1C}", description: 'Порт агента кластера 1с. По умолчанию 1541', name: 'PORT1C')
+        //string(defaultValue: "${env.BASE1C}", description: 'Имя базы для загрузки из файлов', name: 'BASE1C')
+        //string(defaultValue: "${env.USER1C}", description: 'Имя пользователя базы 1с', name: 'USER1C')
+        //string(defaultValue: "${env.PWD1C}", description: 'Пароль пользователя', name: 'PWD1C')
         string(defaultValue: "${env.CFPATH}", description: 'Катталог для сохранения файла .cf', name: 'CFPATH')
     }
     agent {
@@ -72,7 +72,7 @@ pipeline {
 
                         CFPATH = "${CFPATH}\\${PROJECT_NAME}.cf"
 
-                        shortPlatformName = Utils.shortPlatformName(PLATFORM1C)
+                        shortPlatformName = utils.shortPlatformName(PLATFORM1C)
                         IB = "File ${TEMP_CATALOG}"
                     }
                 }
