@@ -4,12 +4,7 @@ import io.libs.Utils
 
 def CURRENT_CATALOG = ''
 def TEMP_CATALOG = ''
-def PROJECT_NAME_EDT = ''
-def PROJECT_KEY
-def EDT_VALIDATION_RESULT = ''
-def GENERIC_ISSUE_JSON = ''
 def SRC = ''
-def PROJECT_URL = ''
 def projectHelpers = new ProjectHelpers()
 def utils = new Utils()
 
@@ -65,10 +60,10 @@ pipeline {
 
                         EDT_VERSION = EDT_VERSION.isEmpty() ? "2020.3" : EDT_VERSION
 
-                        SERVER1C = SERVER1C.isEmpty() ? 'localhost' : SERVER1C
-                        PORT1C = PORT1C.isEmpty() ? '1541' : PORT1C
-                        PLATFORM1C = PLATFORM1C.isEmpty() ? '8.3.14.1779' : PLATFORM1C
-                        baseconnbtring = projectHelpers.getConnString(SERVER1C, BASE1C, PORT1C)
+                        // SERVER1C = SERVER1C.isEmpty() ? 'localhost' : SERVER1C
+                        // PORT1C = PORT1C.isEmpty() ? '1541' : PORT1C
+                        // PLATFORM1C = PLATFORM1C.isEmpty() ? '8.3.14.1779' : PLATFORM1C
+                        // baseconnbtring = projectHelpers.getConnString(SERVER1C, BASE1C, PORT1C)
 
                         CFPATH = "${CFPATH}\\${PROJECT_NAME}.cf"
 
