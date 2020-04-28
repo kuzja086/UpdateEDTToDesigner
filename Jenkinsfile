@@ -23,7 +23,7 @@ pipeline {
         //string(defaultValue: "${env.BASE1C}", description: 'Имя базы для загрузки из файлов', name: 'BASE1C')
         //string(defaultValue: "${env.USER1C}", description: 'Имя пользователя базы 1с', name: 'USER1C')
         //string(defaultValue: "${env.PWD1C}", description: 'Пароль пользователя', name: 'PWD1C')
-        string(defaultValue: "${env.CFPATH}", description: 'Катталог для сохранения файла .cf', name: 'CFPATH')
+        string(defaultValue: "${env.CFPATH}", description: 'Каталог для сохранения файла .cf. Например: D:\1c', name: 'CFPATH')
     }
     agent {
         label "${(env.jenkinsAgent == null || env.jenkinsAgent == 'null') ? "master" : env.jenkinsAgent}"
