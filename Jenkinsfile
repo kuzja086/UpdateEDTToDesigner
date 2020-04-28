@@ -1,5 +1,6 @@
 @Library("shared-libraries")
 import io.libs.ProjectHelpers
+import io.libs.Utils
 
 def CURRENT_CATALOG = ''
 def TEMP_CATALOG = ''
@@ -10,6 +11,7 @@ def GENERIC_ISSUE_JSON = ''
 def SRC = ''
 def PROJECT_URL = ''
 def projectHelpers = new ProjectHelpers()
+def Utils = new Utils()
 
 pipeline {
 
@@ -56,6 +58,8 @@ pipeline {
                         dir(XMLPATH){
                             deleteDir()
                         }
+                        shortPlatformName
+                        IB = "File = ${TEMP_CATALOG} DBFormat "
 
                         PROJECT_NAME_EDT = "${CURRENT_CATALOG}\\${PROJECT_NAME}"
 
@@ -67,6 +71,9 @@ pipeline {
                         baseconnbtring = projectHelpers.getConnString(SERVER1C, BASE1C, PORT1C)
 
                         CFPATH = "${CFPATH}\\${PROJECT_NAME}.cf"
+
+                        shortPlatformName = Utils.shortPlatformName(PLATFORM1C)
+                        IB = "File ${TEMP_CATALOG}"
                     }
                 }
             }
@@ -103,8 +110,9 @@ pipeline {
                 timestamps {
                     script {
                         cmd("""
-                        cd C:\\Program Files (x86)\\1cv8\\${PLATFORM1C}\\bin\\
-                        1cv8.exe" DESIGNER /s \"${baseconnbtring}\" /N\"${USER1C}\" /P\"${PWD1C}\" /LoadConfigFromFiles \"${XMLPATH}\" /UpdateDBCfg
+                        cd /D C:\\Program Files (x86)\\1cv8\\${PLATFORM1C}\\bin\\
+                        1cv8.exe CREATEINFOBASE ${IB} DBFormat ${shortPlatformName}
+                        1cv8.exe DESIGNER /WA- /DISABLESTARTUPDIALOGS ${IB} /LoadConfigFromFiles ${XMLPATH} /UpdateDBCfg
                         """)
                    }
                 }
@@ -115,7 +123,8 @@ pipeline {
                 timestamps {
                     script {
                         cmd("""
-                        C:\\Program Files\\1cv8\\\"${PLATFORM1C}\"\\bin\\1cv8.exe" DESIGNER /s \"${baseconnbtring}\" /N\"${USER1C}\" /P\"${PWD1C}\" /DumpDBCfg  \"${CFPATH}\"
+                        cd /D C:\\Program Files (x86)\\1cv8\\${PLATFORM1C}\\bin\\
+                        1cv8.exe" DESIGNER /WA- /DISABLESTARTUPDIALOGS ${IB} /CreateDistributionFiles -cffile ${CFPATH}
                         """)
                    }
                 }
