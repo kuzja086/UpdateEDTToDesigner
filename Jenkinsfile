@@ -5,6 +5,7 @@ import io.libs.Utils
 def CURRENT_CATALOG = ''
 def TEMP_CATALOG = ''
 def SRC = ''
+def shortPlatformName = ''
 def projectHelpers = new ProjectHelpers()
 def utils = new Utils()
 
