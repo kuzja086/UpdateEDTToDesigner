@@ -1,11 +1,6 @@
 @Library("shared-libraries")
 import io.libs.ProjectHelpers
 
-def BIN_CATALOG = ''
-def ACC_PROPERTIES = ''
-def ACC_BASE = ''
-def ACC_USER = ''
-def BSL_LS_PROPERTIES = ''
 def CURRENT_CATALOG = ''
 def TEMP_CATALOG = ''
 def PROJECT_NAME_EDT = ''
@@ -23,7 +18,7 @@ pipeline {
         string(defaultValue: "${env.git_repo_branch}", description: 'Ветка репозитория, которую необходимо проверить. По умолчанию master', name: 'git_repo_branch') 
         string(defaultValue: "${env.jenkinsAgent}", description: 'Нода дженкинса, на которой запускать пайплайн. По умолчанию master', name: 'jenkinsAgent')
         string(defaultValue: "${env.EDT_VERSION}", description: 'Используемая версия EDT. По умолчанию 2020.3', name: 'EDT_VERSION')
-        string(defaultValue: "${env.1сPlatform}", description: 'Используемая платформа. По умолчанию 8.3.14.1779', name: '1сPlatform')
+        string(defaultValue: "${env.1cPlatform}", description: 'Используемая платформа. По умолчанию 8.3.14.1779', name: '1сPlatform')
         string(defaultValue: "${env.1сServer}", description: 'Адрес сервера 1С. По умолчанию localhost', name: '1сServer')
         string(defaultValue: "${env.1cPort}", description: 'Порт агента кластера 1с. По умолчанию 1541', name: '1cPort')
         string(defaultValue: "${env.1cUser}", description: 'Имя пользователя базы 1с', name: '1cUser')
