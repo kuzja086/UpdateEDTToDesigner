@@ -21,10 +21,10 @@ pipeline {
         string(defaultValue: "${env.PLATFORM1C}", description: 'Используемая платформа. По умолчанию 8.3.14.1779', name: 'PLATFORM1C')
         string(defaultValue: "${env.SERVER1C}", description: 'Адрес сервера 1С. По умолчанию localhost', name: 'SERVER1C')
         string(defaultValue: "${env.PORT1C}", description: 'Порт агента кластера 1с. По умолчанию 1541', name: 'PORT1C')
+        string(defaultValue: "${env.BASE1C}", description: 'Имя базы для загрузки из файлов', name: 'BASE1C')
         string(defaultValue: "${env.USER1C}", description: 'Имя пользователя базы 1с', name: 'USER1C')
         string(defaultValue: "${env.PWD1C}", description: 'Пароль пользователя', name: 'PWD1C')
-        string(defaultValue: "${env.BASE1C}", description: 'Имя базы для загрузки из файлов', name: 'BASE1C')
-        string(defaultValue: "${env.CFPATH}", description: 'Путь для сохранения файла .cf', name: 'CFPATH')
+        string(defaultValue: "${env.CFPATH}", description: 'Катталог для сохранения файла .cf', name: 'CFPATH')
     }
     agent {
         label "${(env.jenkinsAgent == null || env.jenkinsAgent == 'null') ? "master" : env.jenkinsAgent}"
@@ -63,6 +63,8 @@ pipeline {
                         PLATFORM1C = PLATFORM1C.isEmpty ? "8.3.14.1779" : PLATFORM1C
 
                         baseconnbtring = projectHelpers.getConnString(SERVER1C, BASE1C, PORT1C)
+
+                        CFPATH = "${CFPATH}\\${PROJECT_NAME}.cf"
                     }
                 }
             }
