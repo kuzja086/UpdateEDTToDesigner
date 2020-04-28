@@ -53,7 +53,9 @@ pipeline {
                         dir(TEMP_CATALOG) {
                             deleteDir()
                         }
-                        dir(XMLPATH){}
+                        dir(XMLPATH){
+                            deleteDir()
+                        }
 
                         PROJECT_NAME_EDT = "${CURRENT_CATALOG}\\${PROJECT_NAME}"
 
