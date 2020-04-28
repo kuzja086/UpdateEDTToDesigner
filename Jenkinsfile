@@ -106,7 +106,7 @@ pipeline {
                         cmd("""
                         cd /D C:\\Program Files (x86)\\1cv8\\${PLATFORM1C}\\bin\\
                         1cv8.exe CREATEINFOBASE ${IB}
-                        1cv8.exe DESIGNER /WA- /DISABLESTARTUPDIALOGS ${IB} /LoadConfigFromFiles ${XMLPATH} /UpdateDBCfg
+                        1cv8.exe DESIGNER /WA- /DISABLESTARTUPDIALOGS /IBConnectionString ${IB} /LoadConfigFromFiles ${XMLPATH} /UpdateDBCfg
                         """)
                    }
                 }
@@ -118,7 +118,7 @@ pipeline {
                     script {
                         cmd("""
                         cd /D C:\\Program Files (x86)\\1cv8\\${PLATFORM1C}\\bin\\
-                        1cv8.exe" DESIGNER /WA- /DISABLESTARTUPDIALOGS ${IB} /CreateDistributionFiles -cffile ${CFPATH}
+                        1cv8.exe" DESIGNER /WA- /DISABLESTARTUPDIALOGS /IBConnectionString ${IB} /CreateDistributionFiles -cffile ${CFPATH}
                         """)
                    }
                 }
