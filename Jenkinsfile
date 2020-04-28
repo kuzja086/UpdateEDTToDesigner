@@ -1,3 +1,5 @@
+@Library("shared-libraries")
+import io.libs.ProjectHelpers
 
 def BIN_CATALOG = ''
 def ACC_PROPERTIES = ''
@@ -21,6 +23,13 @@ pipeline {
         string(defaultValue: "${env.git_repo_branch}", description: 'Ветка репозитория, которую необходимо проверить. По умолчанию master', name: 'git_repo_branch') 
         string(defaultValue: "${env.jenkinsAgent}", description: 'Нода дженкинса, на которой запускать пайплайн. По умолчанию master', name: 'jenkinsAgent')
         string(defaultValue: "${env.EDT_VERSION}", description: 'Используемая версия EDT. По умолчанию 2020.3', name: 'EDT_VERSION')
+        string(defaultValue: "${env.1сPlatform}", description: 'Используемая платформа. По умолчанию 8.3.14.1779', name: '1сPlatform')
+        string(defaultValue: "${env.1сServer}", description: 'Адрес сервера 1С. По умолчанию localhost', name: '1сServer')
+        string(defaultValue: "${env.1cPort}", description: 'Порт агента кластера 1с. По умолчанию 1541', name: '1cPort')
+        string(defaultValue: "${env.1cUser}", description: 'Имя пользователя базы 1с', name: '1cUser')
+        string(defaultValue: "${env.1cPwd}", description: 'Пароль пользователя', name: '1cPwd')
+        string(defaultValue: "${env.1сBase}", description: 'Имя базы для загрузки из файлов', name: '1сBase')
+        string(defaultValue: "${env.cfPath}", description: 'Путь для сохранения файла .cf', name: 'cfPath')
     }
     agent {
         label "${(env.jenkinsAgent == null || env.jenkinsAgent == 'null') ? "master" : env.jenkinsAgent}"
@@ -42,16 +51,23 @@ pipeline {
                         CURRENT_CATALOG = pwd()
                         TEMP_CATALOG = "${CURRENT_CATALOG}\\temp"
                         CURRENT_CATALOG = "${CURRENT_CATALOG}\\Repo"
-                        XMLPATH = "${TEMP_CATALOG}\\xmlpath"
+                        XMLPATH = "${CURRENT_CATALOG}\\xmlpath"
 
                         // создаем/очищаем временный каталог
                         dir(TEMP_CATALOG) {
                             deleteDir()
-                            dir(XMLPATH){}
                         }
+                        dir(XMLPATH){}
+
                         PROJECT_NAME_EDT = "${CURRENT_CATALOG}\\${PROJECT_NAME}"
 
                         EDT_VERSION = EDT_VERSION.isEmpty() ? '2020.3' : EDT_VERSION
+
+                        1сServer = 1сServer.isEmpty() ? "localhost" : 1сServer
+                        1cPort = 1cPort.isEmpty() ? "1541" : 1cPort
+                        1сPlatform = 1сPlatform.isEmpty ? "8.3.14.1779" : 1cPlatform
+
+                        baseconnbtring = projectHelpers.getConnString(1сServer, 1сBase, 1cPort)
                     }
                 }
             }
@@ -77,7 +93,29 @@ pipeline {
                 timestamps {
                     script {
                         cmd("""
-                        ring edt@${EDT_VERSION} workspace export --workspace-location \"${TEMP_CATALOG}\" --project \"${PROJECT_NAME_EDT}\" --configuration-files \"${XMLPATH}\
+                        ring edt@${EDT_VERSION} workspace export --workspace-location \"${1сServer}\" --project \"${PROJECT_NAME_EDT}\" --configuration-files \"${XMLPATH}\
+                        """)
+                   }
+                }
+            }
+        }
+        stage('Загрузка конфигурации из файлов') {
+            steps {
+                timestamps {
+                    script {
+                        cmd("""
+                        C:\\Program Files\\1cv8\\\"${1сPlatform}\"\\bin\\1cv8.exe" DESIGNER /s \"${baseconnbtring}\" /N\"${1cUser}\" /P\"${1cPwd}\" /LoadConfigFromFiles \"${XMLPATH}\" /UpdateDBCfg
+                        """)
+                   }
+                }
+            }
+        }
+         stage('Сохранение файла .cf') {
+            steps {
+                timestamps {
+                    script {
+                        cmd("""
+                        C:\\Program Files\\1cv8\\\"${1сPlatform}\"\\bin\\1cv8.exe" DESIGNER /s \"${baseconnbtring}\" /N\"${1cUser}\" /P\"${1cPwd}\" /DumpDBCfg  \"${cfPath}\"
                         """)
                    }
                 }
