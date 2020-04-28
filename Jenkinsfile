@@ -9,6 +9,7 @@ def EDT_VALIDATION_RESULT = ''
 def GENERIC_ISSUE_JSON = ''
 def SRC = ''
 def PROJECT_URL = ''
+def projectHelpers = new ProjectHelpers()
 
 pipeline {
 
