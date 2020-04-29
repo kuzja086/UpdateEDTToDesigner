@@ -18,13 +18,16 @@ pipeline {
         string(defaultValue: "${env.jenkinsAgent}", description: 'Нода дженкинса, на которой запускать пайплайн. По умолчанию master', name: 'jenkinsAgent')
         string(defaultValue: "${env.EDT_VERSION}", description: 'Используемая версия EDT. По умолчанию 2020.3', name: 'EDT_VERSION')
         string(defaultValue: "${env.PLATFORM1C}", description: 'Используемая платформа. По умолчанию 8.3.14.1779', name: 'PLATFORM1C')
-        //string(defaultValue: "${env.SERVER1C}", description: 'Адрес сервера 1С. По умолчанию localhost', name: 'SERVER1C')
-        //string(defaultValue: "${env.PORT1C}", description: 'Порт агента кластера 1с. По умолчанию 1541', name: 'PORT1C')
-        //string(defaultValue: "${env.BASE1C}", description: 'Имя базы для загрузки из файлов', name: 'BASE1C')
-        //string(defaultValue: "${env.USER1C}", description: 'Имя пользователя базы 1с', name: 'USER1C')
-        //string(defaultValue: "${env.PWD1C}", description: 'Пароль пользователя', name: 'PWD1C')
+        string(defaultValue: "${env.SERVER1C}", description: 'Адрес сервера 1С. По умолчанию localhost', name: 'SERVER1C')
+        string(defaultValue: "${env.PORT1C}", description: 'Порт агента кластера 1с. По умолчанию 1541', name: 'PORT1C')
+        string(defaultValue: "${env.BASE1C}", description: 'Имя базы для загрузки из файлов', name: 'BASE1C')
+        string(defaultValue: "${env.USER1C}", description: 'Имя пользователя базы 1с', name: 'USER1C')
+        string(defaultValue: "${env.PWD1C}", description: 'Пароль пользователя', name: 'PWD1C')
         string(defaultValue: "${env.CFPATH}", description: 'Каталог для сохранения файла .cf. Например: D:\\1c. По Умолчанию в Воркспейсе ноды', name: 'CFPATH')
         string(defaultValue: "${env.git_credentials_Id}", description: 'ID Credentials для получения изменений из гит-репозитория', name: 'git_credentials_Id')
+        string(defaultValue: "${env.Repository}", description: 'Путь к хранилищу конфигурации', name: 'Repository')
+        string(defaultValue: "${env.UserRepository}", description: 'Пользователь хранилища', name: 'UserRepository')
+        string(defaultValue: "${env.PWDRepository}", description: 'Пароль пользователя в хранилище', name: 'PWDRepository')
     }
     agent {
         label "${(env.jenkinsAgent == null || env.jenkinsAgent == 'null') ? "master" : env.jenkinsAgent}"
@@ -62,10 +65,10 @@ pipeline {
 
                         EDT_VERSION = EDT_VERSION.isEmpty() ? "2020.3" : EDT_VERSION
 
-                        // SERVER1C = SERVER1C.isEmpty() ? 'localhost' : SERVER1C
-                        // PORT1C = PORT1C.isEmpty() ? '1541' : PORT1C
+                        SERVER1C = SERVER1C.isEmpty() ? 'localhost' : SERVER1C
+                        PORT1C = PORT1C.isEmpty() ? '1541' : PORT1C
                         PLATFORM1C = PLATFORM1C.isEmpty() ? '8.3.14.1779' : PLATFORM1C
-                        // baseconnbtring = projectHelpers.getConnString(SERVER1C, BASE1C, PORT1C)
+                        baseconnstring = projectHelpers.getConnString(SERVER1C, BASE1C, PORT1C)
 
                         CFPATH = CFPATH.isEmpty() ? "${CATALOGCF}${NAMECF}" : "${CFPATH}${NAMECF}"
 
@@ -122,6 +125,26 @@ pipeline {
                         cmd("""
                         cd /D C:\\Program Files (x86)\\1cv8\\${PLATFORM1C}\\bin\\
                         1cv8.exe DESIGNER /WA- /DISABLESTARTUPDIALOGS /IBConnectionString ${IB} /CreateDistributionFiles -cffile ${CFPATH}
+                        """)
+                   }
+                }
+            }
+        }
+         stage('Сравнение/Объединение с базой в хранилище') {
+            steps {
+                timestamps {
+                    script {
+                        //Надо сделать цикл по списку баз
+                        if (REPOSITORY != null && !REPOSITORY.isEmpty() && USERREPOSITORY != null && !USERREPOSITORY.isEmpty() && PWDREPOSITORY != null && PWDREPOSITORY.isEmpty()) {
+                            cmd("""
+                            cd /D C:\\Program Files (x86)\\1cv8\\${PLATFORM1C}\\bin\\
+                            1cv8.exe DESIGNER /WA- /DISABLESTARTUPDIALOGS ${baseconnstring} ${USER1C} ${PWD1C} /ConfigurationRepositoryF ${REPOSITORY} /ConfigurationRepositoryN ${USERREPOSITORY} /ConfigurationRepositoryP ${PWDREPOSITORY} /ConfigurationRepositoryUnLock -force
+                            """)
+                        }
+
+                        cmd("""
+                        cd /D C:\\Program Files (x86)\\1cv8\\${PLATFORM1C}\\bin\\
+                        1cv8.exe DESIGNER /WA- /DISABLESTARTUPDIALOGS ${baseconnstring} ${USER1C} ${PWD1C} /MergeCfg ${CFPATH} -force /UpdateCfg
                         """)
                    }
                 }
