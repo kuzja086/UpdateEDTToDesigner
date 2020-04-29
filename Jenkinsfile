@@ -118,7 +118,7 @@ pipeline {
                     script {
                         cmd("""
                         cd /D C:\\Program Files (x86)\\1cv8\\${PLATFORM1C}\\bin\\
-                        1cv8.exe" DESIGNER /WA- /DISABLESTARTUPDIALOGS /IBConnectionString ${IB} /CreateDistributionFiles -cffile ${CFPATH}
+                        1cv8.exe DESIGNER /WA- /DISABLESTARTUPDIALOGS /IBConnectionString ${IB} /CreateDistributionFiles -cffile ${CFPATH}
                         """)
                    }
                 }
