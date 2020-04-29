@@ -23,7 +23,8 @@ pipeline {
         //string(defaultValue: "${env.BASE1C}", description: 'Имя базы для загрузки из файлов', name: 'BASE1C')
         //string(defaultValue: "${env.USER1C}", description: 'Имя пользователя базы 1с', name: 'USER1C')
         //string(defaultValue: "${env.PWD1C}", description: 'Пароль пользователя', name: 'PWD1C')
-        string(defaultValue: "${env.CFPATH}", description: 'Каталог для сохранения файла .cf. Например: D:\1c', name: 'CFPATH')
+        string(defaultValue: "${env.CFPATH}", description: 'Каталог для сохранения файла .cf. Например: D:\\1c', name: 'CFPATH')
+        string(defaultValue: "${env.git_credentials_Id}", description: 'ID Credentials для получения изменений из гит-репозитория', name: 'git_credentials_Id')
     }
     agent {
         label "${(env.jenkinsAgent == null || env.jenkinsAgent == 'null') ? "master" : env.jenkinsAgent}"
@@ -82,7 +83,7 @@ pipeline {
                             doGenerateSubmoduleConfigurations: false,
                             extensions: [[$class: 'CheckoutOption', timeout: 60], [$class: 'CloneOption', depth: 0, noTags: true, reference: '', shallow: false, timeout: 60]],
                             submoduleCfg: [],
-                            userRemoteConfigs: [[url: git_repo_url]]])
+                            userRemoteConfigs: [[credentialsId: git_credentials_Id, url: git_repo_url]]])
                         }
                     }
                 }
