@@ -23,7 +23,7 @@ pipeline {
         //string(defaultValue: "${env.BASE1C}", description: 'Имя базы для загрузки из файлов', name: 'BASE1C')
         //string(defaultValue: "${env.USER1C}", description: 'Имя пользователя базы 1с', name: 'USER1C')
         //string(defaultValue: "${env.PWD1C}", description: 'Пароль пользователя', name: 'PWD1C')
-        string(defaultValue: "${env.CFPATH}", description: 'Каталог для сохранения файла .cf. Например: D:\\1c', name: 'CFPATH')
+        string(defaultValue: "${env.CFPATH}", description: 'Каталог для сохранения файла .cf. Например: D:\\1c. По Умолчанию в Воркспейсе ноды', name: 'CFPATH')
         string(defaultValue: "${env.git_credentials_Id}", description: 'ID Credentials для получения изменений из гит-репозитория', name: 'git_credentials_Id')
     }
     agent {
@@ -47,6 +47,8 @@ pipeline {
                         TEMP_CATALOG = "${CURRENT_CATALOG}\\temp"
                         XMLPATH = "${CURRENT_CATALOG}\\xmlpath"
                         CURRENT_CATALOG = "${CURRENT_CATALOG}\\Repo"
+                        NAMECF = "\\${PROJECT_NAME}.cf"
+                        CATALOGCF = pwd()
 
                         // создаем/очищаем временный каталог
                         dir(TEMP_CATALOG) {
@@ -65,7 +67,7 @@ pipeline {
                         PLATFORM1C = PLATFORM1C.isEmpty() ? '8.3.14.1779' : PLATFORM1C
                         // baseconnbtring = projectHelpers.getConnString(SERVER1C, BASE1C, PORT1C)
 
-                        CFPATH = "${CFPATH}\\${PROJECT_NAME}.cf"
+                        CFPATH = CFPATH.isEmpty() ? "${CATALOGCF}${NAMECF}" : "${CFPATH}${NAMECF}"
 
                         shortPlatformName = utils.shortPlatformName(PLATFORM1C)
                         IB = "File=${TEMP_CATALOG}"
