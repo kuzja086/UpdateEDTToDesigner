@@ -28,7 +28,7 @@ pipeline {
         string(defaultValue: "${env.Repository}", description: 'Путь к хранилищу конфигурации', name: 'Repository')
         string(defaultValue: "${env.UserRepository}", description: 'Пользователь хранилища', name: 'UserRepository')
         string(defaultValue: "${env.PWDRepository}", description: 'Пароль пользователя в хранилище', name: 'PWDRepository')
-        // booleanParam(defaultValue: env.LOADFILE== null ? false : env.LOADFILE, description: 'Выполнить выгрузку в ', name: 'LOADFILE')
+        booleanParam(defaultValue: env.Check == null ? true : env.Check, description: 'Выполнять проверку кода. По умолчанию Истина', name: 'Check')
     }
     agent {
         label "${(env.jenkinsAgent == null || env.jenkinsAgent == 'null') ? "master" : env.jenkinsAgent}"
@@ -53,6 +53,12 @@ pipeline {
                         CURRENT_CATALOG = "${CURRENT_CATALOG}\\Repo"
                         NAMECF = "\\${PROJECT_NAME}.cf"
                         CATALOGCF = pwd()
+                        
+                        EDT_VALIDATION_RESULT = "${TEMP_CATALOG}\\edt-result.csv"
+                        BSL_LS_PROPERTIES = "./Sonar/bsl-language-server.conf"
+                        BSL_LS = "./Sonar/bsl-language-server.jar"
+                        GENERIC_ISSUE_JSON ="${TEMP_CATALOG}/bsl-generic-json.json,${TEMP_CATALOG}/edt.json"
+                        STEBI_SETTINGS = "./Sonar/settings.json"
 
                         // создаем/очищаем временный каталог
                         dir(TEMP_CATALOG) {
@@ -100,8 +106,41 @@ pipeline {
                 timestamps {
                     script {
                         cmd("""
+                        @set RING_OPTS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru
                         ring edt@${EDT_VERSION} workspace export --workspace-location \"${TEMP_CATALOG}\" --project \"${PROJECT_NAME_EDT}\" --configuration-files \"${XMLPATH}\
                         """)
+                   }
+                }
+            }
+        }
+         stage('Проверка кода') {
+            steps {
+                timestamps {
+                    script {
+                        //Надо сделать цикл по списку баз
+                        if (${Check}) {
+                            cmd("""
+                            @set RING_OPTS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru
+                            ring edt@${EDT_VERSION} workspace validate --workspace-location \"${TEMP_CATALOG}\" --file \"${EDT_VALIDATION_RESULT}\" --project-list \"${PROJECT_NAME_EDT}\"
+                            set SRC=\"./Repo/${SRC}\"
+                            stebi convert -e \"${EDT_VALIDATION_RESULT}\" \"${TEMP_CATALOG}/edt.json\"
+                            @echo EDT Check complited. 
+                            """) 
+                            
+                            //Проверка BSL
+                            cmd("""
+                            java -Xmx16g -jar ${BSL_LS} -a -s \"./Repo/${SRC}\" -r generic -c \"${BSL_LS_PROPERTIES}\" -o \"${TEMP_CATALOG}\"
+                            @echo BSL Check complited.
+                            """)
+
+                            //Трансформация результатов
+                            cmd("""
+                            set GENERIC_ISSUE_SETTINGS_JSON=\"${STEBI_SETTINGS}\"
+                            set GENERIC_ISSUE_JSON=${GENERIC_ISSUE_JSON}
+                            set SRC=\"./Repo/${SRC}\"
+                            stebi transform -r=0
+                            """)
+                        }
                    }
                 }
             }
@@ -131,7 +170,7 @@ pipeline {
                 }
             }
         }
-         stage('Сравнение/Объединение с базой в хранилище') {
+        stage('Сравнение/Объединение с базой в хранилище') {
             steps {
                 timestamps {
                     script {

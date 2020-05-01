@@ -1,0 +1,1 @@
+java -Dfile.encoding=UTF-8 -jar agent.jar -jnlpUrl http://192.168.0.235:8080/computer/testserver/slave-agent.jnlp -secret c8b924a10983737641487a64b3d8c252e4b61b17e83da575130cca6e7ab56a20 -workDir "D:\jenkins"
