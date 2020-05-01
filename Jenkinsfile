@@ -118,7 +118,7 @@ pipeline {
                 timestamps {
                     script {
                         //Надо сделать цикл по списку баз
-                        if (${Check}) {
+                        if (${Check}==true) {
                             cmd("""
                             @set RING_OPTS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru
                             ring edt@${EDT_VERSION} workspace validate --workspace-location \"${TEMP_CATALOG}\" --file \"${EDT_VALIDATION_RESULT}\" --project-list \"${PROJECT_NAME_EDT}\"
